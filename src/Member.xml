@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberns">
+	<resultMap id="memberResult" type="member">
+		<result property="u_id" column="u_id" />
+		<result property="u_passwd" column="u_passwd" />
+		<result property="u_name" column="u_name" />
+		<result property="u_nickname" column="u_nickname" />
+		<result property="u_birthday" column="u_birthday" />
+		<result property="u_gender" column="u_gender" />
+		<result property="u_job" column="u_job" />
+		<result property="u_address" column="u_address" />
+		<result property="u_postcode" column="u_postcode" />
+		<result property="u_tel" column="u_tel" />
+		<result property="u_email" column="u_email" />
+		<result property="u_reg_date" column="u_reg_date" />
+		<result property="u_del" column="u_del" />
+	</resultMap>
+	<select id="confirm" parameterType="string" resultType="string"><!-- 중복확인 -->
+		select u_id
+		from member where u_id=#{u_id}
+	</select>
+	<select id="check" parameterType="string" resultType="member">
+		select *
+		from member where u_id=#{u_id} and u_del != 'y'
+	</select>
+	<select id="list" parameterType="hashMap" resultMap="memberResult">
+		select *
+		from (select a.*, rownum rn
+		from (select * from member order by u_reg_date desc) a)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	<select id="select" parameterType="string" resultType="member">
+		select * from member where u_id=#{u_id} and u_del !='y'
+	</select>
+	<select id="getTotal" resultType="int">
+		select count(*) from member
+	</select>
+	<update id="update" parameterType="member">
+		update member set
+		u_passwd=#{u_passwd},u_name=#{u_name},u_nickname=#{u_nickname},
+		u_job=#{u_job},u_email=#{u_email},u_address=#{u_address},
+		u_postcode=#{u_postcode},u_tel=#{u_tel} where u_id=#{u_id}
+	</update>
+	<update id="delete" parameterType="string">
+		update member set u_del='y'
+		where u_id=#{u_id}
+	</update>
+	<insert id="insert" parameterType="member">
+		insert into member values
+		(#{u_id},#{u_passwd},#{u_name},#{u_nickname},#{u_birthday},
+		#{u_gender},#{u_job},#{u_address},#{u_postcode},#{u_tel},#{u_email},sysdate,'n')
+	</insert>
+</mapper>

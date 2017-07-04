@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mypagens">
+	<resultMap id="mypageResult" type="mypage">
+		<result property="my_num" column="my_num" />
+		<result property="u_id" column="u_id" />
+		<result property="ma_num" column="ma_num" />
+		<result property="r_num" column="r_num" />
+		<result property="m_id" column="m_id" />
+		<result property="my_reg_date" column="my_reg_date" />
+		<result property="my_del" column="my_del" />
+	</resultMap>
+
+	<select id="max" resultType="int">
+		select nvl(max(my_num),0)+1 from
+		mypage
+	</select>
+	
+	<insert id="userSave" parameterType="mypage">
+		insert into mypage values(
+		#{my_num} ,#{u_id},#{ma_num} ,#{r_num},'',sysdate,'n')
+	</insert>
+	
+	<insert id="mgrSave" parameterType="mypage">
+		insert into mypage values(
+		#{my_num} ,'',#{ma_num} ,#{r_num},#{m_id},sysdate,'n')
+	</insert>
+
+	<select id="mylist" parameterType="hashMap" resultMap="mypageResult">
+		select *
+		from mypage where u_id=#{u_id} or m_id=#{m_id}
+	</select>
+
+	<select id="select" parameterType="int" resultType="mypage">
+		select *
+		from
+		mypage where my_num=#{my_num} and my_del!='y'
+	</select>
+
+	<select id="getTotal" resultType="int">
+		select count(*) from mypage
+	</select>
+
+	<update id="delete" parameterType="string">
+		update mypage set my_del='y'
+		where my_num=#{my_num}
+	</update>
+
+
+</mapper>

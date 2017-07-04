@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recipens">
+	<resultMap id="recipeResult" type="Recipe">
+		<result property="r_num" column="r_num" />
+		<result property="u_id" column="u_id" />
+		<result property="m_id" column="m_id" />
+		<result property="r_kind" column="r_kind" />
+		<result property="r_title" column="r_title" />
+		<result property="r_image" column="r_image" />
+		<result property="r_ingredients" column="r_ingredients" />
+		<result property="r_content" column="r_content" />
+		<result property="r_readcount" column="r_readcount" />
+		<result property="r_likeit" column="r_likeit" />
+		<result property="r_saveit" column="r_saveit" />
+		<result property="r_reg_date" column="r_reg_date" />
+		<result property="r_del" column="r_del" />
+	</resultMap>
+	<select id="max" resultType="int">
+		select nvl(max(r_num),0)+1 from recipe
+	</select>
+	
+	<insert id="insert" parameterType="recipe">
+		insert into recipe values(
+		#{r_num} ,#{u_id} ,#{m_id}, #{r_kind},#{r_title} ,#{r_image} ,#{r_ingredients},
+		#{r_content} , 0 ,0 ,0,sysdate,'n')
+	</insert>
+	
+	<update id="readcountUpdate" parameterType="int">
+		update recipe set r_readcount=r_readcount+1 where r_num=#{r_num}
+	</update>
+	<update id="likeitUpdate" parameterType="int">
+		update recipe set r_likeit=r_likeit+1 where r_num=#{r_num}
+	</update>
+	<update id="saveitUpdate" parameterType="int">
+		update recipe set r_saveit=r_saveit+1 where r_num=#{r_num}
+	</update>
+
+	<select id="confirm" parameterType="string" resultType="string">
+		select
+		m.passwd
+		from recipe r,member m where #{u_id}=m.u_id
+	</select>
+	
+	<select id="list" parameterType="hashMap" resultMap="recipeResult">
+		select *
+		from (select a.*, rownum rn
+		from (select * from recipe
+			<if test='r_kind!=0'>
+				where r_kind=#{r_kind}
+			</if> 
+		order by r_reg_date desc) a)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<select id="rindex" resultType="recipe">
+		select *from (select a.*, rownum rn 
+		from (select* from recipe where r_del='n' order by r_reg_date desc) a) 
+		where rn between 1 and 5
+	</select>
+	
+	<select id="mgrlist" resultType="recipe">
+		select * from recipe where r_del='y' order by r_reg_date desc
+	</select>
+	
+	<select id="allList" resultType="recipe">
+		select * from recipe
+	</select>
+	
+	<select id="mylist" parameterType="hashMap" resultMap="recipeResult">
+		select *
+		from recipe where u_id=#{u_id} or m_id=#{m_id}
+	</select>
+	
+	<select id="select" parameterType="int" resultType="recipe">
+		select *
+		from
+		recipe where r_num=#{r_num}
+	</select>
+	
+	<select id="getTotal" parameterType="recipe" resultType="int">
+		select count(*) from recipe
+			<if test='r_kind!=0'>
+				where r_kind=#{r_kind}
+			</if>
+	</select>
+	
+	<update id="update" parameterType="recipe">
+		update recipe set 
+		r_kind=#{r_kind}, r_image=#{r_image}, r_ingredients=#{r_ingredients},
+		r_content=#{r_content},r_title=#{r_title} where
+		r_num=#{r_num}
+	</update>
+	
+	<update id="delete" parameterType="int">
+		update recipe set r_del='y'
+		where r_num=#{r_num}
+	</update>
+	
+	<delete id="realDel" parameterType="int">
+		delete recipe where r_num=#{r_num}
+	</delete>
+
+	
+</mapper>

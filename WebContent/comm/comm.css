@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+body{
+
+}
+table{
+border: 1px double silver;
+}
+tr{
+background-color: white;
+width: 100%;
+}
+tr:Hover{
+background-color: #F9F9F9;
+color: navy;
+}
+th{
+background-color: white;
+border: 1px solid silver;
+text-align: center;
+}
+td{
+border: 1px solid silver;
+}
+caption {
+font-size: 28px;
+}
+a{
+	cursor: pointer;
+}

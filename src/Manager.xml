@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="managerns">
+	<resultMap id="managerResult" type="manager">
+		<result property="m_id" column="m_id" />
+		<result property="m_passwd" column="m_passwd" />
+	</resultMap>
+	<select id="confirm" parameterType="string" resultType="string"><!-- 중복확인 -->
+		select m_id
+		from manager where m_id=#{m_id}
+	</select>
+	<select id="check" parameterType="string" resultType="manager">
+		select *
+		from manager where m_id=#{m_id}
+	</select>
+	<update id="update" parameterType="manager">
+		update manager set
+		m_passwd=#{m_passwd} where m_id=#{m_id}
+	</update>
+	<update id="delete" parameterType="string">
+		delete manager where
+		m_id=#{m_id}
+	</update>
+	<insert id="insert" parameterType="manager">
+		insert into manager values
+		(#{m_id},#{m_passwd})
+	</insert>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="magazinens">
+	<resultMap id="magazineResult" type="Magazine">
+		<result property="ma_num" column="ma_num" />
+		<result property="m_id" column="m_id" />
+		<result property="ma_title" column="ma_title" />
+		<result property="ma_kind" column="ma_kind" />
+		<result property="ma_image" column="ma_image" />
+		<result property="ma_content" column="ma_content" />
+		<result property="ma_readcount" column="ma_readcount" />
+		<result property="ma_reg_date" column="ma_reg_date" />
+		<result property="ma_del" column="ma_del" />
+	</resultMap>
+	
+	<select id="max" resultType="int">
+		select nvl(max(ma_num),0)+1 from magazine
+	</select>
+	
+	<insert id="insert" parameterType="magazine">
+		insert into magazine values(
+		#{ma_num} ,#{m_id},#{ma_title} ,#{ma_kind}, #{ma_image} ,#{ma_content} ,#{ma_readcount},
+		sysdate,'n')
+	</insert>
+	
+	<update id="readcountUpdate" parameterType="int">
+		update magazine set ma_readcount=ma_readcount+1 where ma_num=#{ma_num}
+	</update>
+
+	<select id="confirm" parameterType="string" resultType="string">
+		select
+		b.m_passwd
+		from magazine a,manager b where a.m_id=b.m_id
+	</select>
+	
+	<select id="list" parameterType="hashMap" resultMap="magazineResult">
+		select *
+		from (select a.*, rownum rn 
+		from (select* from magazine 
+		<if test="ma_kind!=0">
+			where ma_kind=#{ma_kind}
+		</if>
+		order by ma_reg_date desc) a) 
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<select id="mylist" resultType="magazine">
+	select * from magazine
+	</select>
+	
+	<select id="mgrlist" resultType="magazine">
+		select * from magazine where ma_del='y' order by ma_reg_date desc
+	</select>
+	
+	<select id="mindex" resultType="magazine">
+		select *from (select a.*, rownum rn 
+		from (select* from magazine where ma_del='n' order by ma_reg_date desc) a) 
+		where rn between 1 and 5		
+	</select>
+	
+	<select id="select" parameterType="int" resultType="magazine">
+		select *
+		from
+		magazine where ma_num=#{ma_num}
+	</select>
+	
+	<select id="getTotal" parameterType="magazine" resultType="int">
+		select count(*) from magazine
+		<if test="ma_kind!=0">
+			where ma_kind=#{ma_kind}
+		</if>
+	</select>
+	
+	<update id="update" parameterType="magazine">
+		update magazine set
+		ma_content=#{ma_content},ma_title=#{ma_title},ma_kind=#{ma_kind}, ma_image=#{ma_image} where
+		ma_num=#{ma_num}
+	</update>
+	
+	<update id="delete" parameterType="string">
+		update magazine set ma_del='y'
+		where ma_num=#{ma_num}
+	</update>
+	
+	<delete id="realDel" parameterType="int">
+		delete magazine where ma_num=#{ma_num}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardRns">
+	<resultMap id="boardRResult" type="BoardR">
+		<result property="br_num" column="br_num" />
+		<result property="r_num" column="r_num"/>
+		<result property="id" column="id" />
+		<result property="br_content" column="br_content" />
+		<result property="br_ref" column="br_ref" />
+		<result property="br_re_step" column="br_re_step" />
+		<result property="br_re_level" column="br_re_level" />
+		<result property="br_reg_date" column="br_reg_date" />
+		<result property="br_del" column="br_del" />
+	</resultMap>
+	
+	<select id="max" resultType="int">
+		select nvl(max(br_num),0)+1 from boardR
+	</select>
+	
+	<insert id="insert" parameterType="boardR">
+		insert into boardR values(
+		#{br_num} ,#{r_num} ,#{id},#{br_content} ,
+		#{br_ref} ,#{br_re_step} ,#{br_re_level} ,sysdate,'n')
+	</insert>
+	
+	<update id="reUpdate" parameterType="hashMap">
+		update boardR set
+		br_re_step=br_re_step+1 where br_ref=#{br_ref} and br_re_step>#{br_re_step}
+	</update>
+	
+	<select id="list" parameterType="int" resultType="boardR">
+		select * 
+		from (select * from boardR order by br_ref desc,br_re_step) where r_num=#{r_num}
+	</select>
+	
+	<select id="select" parameterType="int" resultType="boardR">
+		select *
+		from
+		boardR where br_num=#{br_num}
+	</select>
+	
+	<select id="getTotal" resultType="int">
+		select count(*) from boardR
+	</select>
+	
+	<update id="update" parameterType="boardR">
+		update boardR set
+		b_content=#{b_content} where
+		br_num=#{br_num}
+	</update>
+	
+	<update id="delete" parameterType="int">
+		update boardR set br_del='y'
+		where br_num=#{br_num}
+	</update>
+	
+	<delete id="realDel" parameterType="int">
+		delete boardR where r_num=#{r_num}
+	</delete>
+	
+</mapper>
