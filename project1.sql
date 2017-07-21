@@ -12,6 +12,7 @@ create table boardR(
 	br_del		char(1)			default 'n',
 	foreign key	(r_num)	references	recipe(r_num)
 );
+select * from tab;
 select * from boardR;
 alter table boardR drop column m_id;
 alter table boardR rename column u_id to id;

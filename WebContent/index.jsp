@@ -28,16 +28,25 @@
 <script type="text/javascript">
 	$(function() {
 		$('#load').load('boardId.do');
-		$('#login').css({
-			'text-align':'right'
-		});
+// 		$('#login').css({
+// 			'text-align':'right'
+// 		});
 		$('#album').load('animation-canvas.html');
 	});
 </script>
 </head>
 <body class="homepage">
 	<div id="page-wrapper">
-	<span id="login">
+		<!-- Header -->
+		<div id="header-wrapper">
+			<div id="header" class="container">
+				<!-- Logo -->
+				<h1 id="logo">
+					<a href="index.jsp">EVERY RECIPE</a>
+				</h1>
+				<p> ※ 이 세상의 모든 레시피 ※</p>
+				
+				<!-- 아이디 세션 확인  -->
 				<c:if test="${u_id==null&&m_id==null }">
 					<ul class="actions">
 						<li><a href="member/loginForm.jsp"
@@ -55,15 +64,6 @@
 						<li><a href="manager/logout.jsp" class="button icon fa-file">LOGOUT</a></li>
 					</ul>
 				</c:if>
-				</span>
-		<!-- Header -->
-		<div id="header-wrapper">
-			<div id="header" class="container">
-				<!-- Logo -->
-				<h1 id="logo">
-					<a href="index.jsp">EVERY RECIPE</a>
-				</h1>
-				<p>이곳은 간략한 사이트 소개</p>
 
 				<!-- Nav -->
 				<nav id="nav">

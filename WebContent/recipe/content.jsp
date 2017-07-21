@@ -18,7 +18,7 @@
 <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="../assets/js/main.js"></script>
 <style type="text/css">
-pre {
+pre,.rimg {
 	text-align: center;
 	font: 16px bold;
 }
@@ -88,8 +88,8 @@ pre {
 		</tr>
 		<tr>
 			<th>본문</th>
-			<td align="left"><img class="image" alt="${recipe.r_image }"
-				src="../uploadR/${recipe.r_image }"> <pre>${recipe.r_content}</pre>
+			<td align="center"><img class="image" alt="${recipe.r_image }"
+				src="../uploadR/${recipe.r_image }" class="rimg"> <pre>${recipe.r_content}</pre>
 			</td>
 		</tr>
 		<tr>

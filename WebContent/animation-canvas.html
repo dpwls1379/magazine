@@ -56,17 +56,24 @@
             $('.slider_text').css('left', -300).each(function (index) {
                 $(this).attr('data-index', index);
             });
-
+			//초기슬라이더 위치 지정
+            var Number=Math.floor(Math.random()*5);
             // 컨트롤 버튼의 클릭 핸들러 지정 및 data-index 할당
             $('.control_button').each(function (index) {
                 $(this).attr('data-index', index);
             }).click(function () {
                 var index = $(this).attr('data-index');
                 moveSlider(index);
+                Number=index;
             });
-         // 초기 슬라이더 위치 지정
-            var randomNumber = Math.floor(Math.random() * 5);
-            moveSlider(randomNumber);
+            //3초에 한번씩 이미지가 슬라이드...
+            setInterval(() => {
+    			moveSlider(Number);
+    			Number++;
+    			if(Number==5){
+    				Number=0;
+    			}
+    		}, 3000);
 
     });
 </script>       
